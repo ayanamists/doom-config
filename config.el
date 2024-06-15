@@ -68,6 +68,9 @@
 ;;   `require' or `use-package'.
 ;; - `map!' for binding new keys
 ;;
+
+(load! "latex-additional/windows.el")
+
 ;; To get information about any of these functions/macros, move the cursor over
 ;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
 ;; This will open documentation for it, including demos of how they are used.
@@ -77,7 +80,7 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-;; add spacemacs-like '<spc> n' keys
+;; add spacemacs-like 'SPC n' keys
 (map! :leader
   "0" 'winum-select-window-0-or-10
   "1" 'winum-select-window-1
@@ -85,3 +88,6 @@
   "3" 'winum-select-window-3
   "4" 'winum-select-window-4
   )
+
+;; add spacemacs-like 'SPC SPC' key to `execute-extended-command'
+(map! :leader "SPC" 'execute-extended-command)
