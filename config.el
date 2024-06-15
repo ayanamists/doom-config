@@ -33,7 +33,10 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 
+;; FIXME why to use such a large scale? Why my ubuntu scale not working?
 (setq doom-font (font-spec :family "Mononoki Nerd Font" :size 33))
+(setq doom-symbol-font (font-spec :family "Noto Sans Symbols" :size 33))
+
 (setq doom-theme 'doom-one)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
@@ -91,3 +94,9 @@
 
 ;; add spacemacs-like 'SPC SPC' key to `execute-extended-command'
 (map! :leader "SPC" 'execute-extended-command)
+
+
+;; add prettify symbols for latex
+(add-hook 'TeX-mode-hook 'magic-latex-buffer)
+(add-hook 'TeX-mode-hook
+          (lambda () (prettify-symbols-mode t)))
