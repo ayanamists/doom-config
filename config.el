@@ -1,4 +1,4 @@
-;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+;;; $DOOMDIR/config.el -*- leical-binding: t; -*-
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
@@ -33,9 +33,10 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 
-;; FIXME why to use such a large scale? Why my ubuntu scale not working?
-(setq doom-font (font-spec :family "Mononoki Nerd Font" :size 33))
-(setq doom-symbol-font (font-spec :family "Noto Sans Symbols" :size 33))
+;; NOTE: see https://github.com/doomemacs/doomemacs/issues/6131#issuecomment-1051576882
+;; should use float for font size
+(setq doom-font (font-spec :family "Mononoki Nerd Font" :size 13.0))
+(setq doom-symbol-font (font-spec :family "Noto Sans Symbols" :size 13.0))
 
 (setq doom-theme 'doom-one)
 
@@ -73,6 +74,7 @@
 ;;
 
 (load! "latex-additional/windows.el")
+(load! "latex-additional/replace-dollar.el")
 
 ;; To get information about any of these functions/macros, move the cursor over
 ;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
@@ -97,6 +99,77 @@
 
 
 ;; add prettify symbols for latex
-(add-hook 'TeX-mode-hook 'magic-latex-buffer)
+;; FIXME: it's so slow, try to fix it
+;; (add-hook 'TeX-mode-hook 'magic-latex-buffer)
+;;
+;; FIXME: I cannot disable `rainbow-delimiters-mode' in TeX mode,
+;; what happend?
 (add-hook 'TeX-mode-hook
-          (lambda () (prettify-symbols-mode t)))
+          (lambda () (prettify-symbols-mode t)
+            (auto-fill-mode t)))
+
+;; (after! tex
+;;   (add-hook 'TeX-update-style-hook (lambda () (rainbow-delimiters-mode -1))))
+;;
+
+(defun get-together-ai-key ()
+  (getenv "TOGETHER_AI_KEY"))
+
+(use-package! gptel
+  :config
+  (setq!
+    gptel-max-tokens 4096
+    gptel-backend (gptel-make-openai "TogetherAI"         ;Any name you want
+    :host "api.together.xyz"
+    :key #'get-together-ai-key
+    :stream t
+    :models '("meta-llama/Llama-3-70b-chat-hf"))
+    gptel-model "meta-llama/Llama-3-70b-chat-hf"))
+
+(use-package! eaf
+  :load-path "~/.config/emacs/site-lisp/emacs-application-framework"
+  ;; FIXME: not working, have to manually run eaf-open
+  ; :custom
+  ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  ; (eaf-browser-continue-where-left-off t)
+  ; (eaf-browser-enable-adblocker t)
+  ; (browse-url-browser-function 'eaf-open-browser)
+  ; :config
+  ; (defalias 'browse-web #'eaf-open-browser)
+  ; (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  ; (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  ; (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  ; (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
+  :config
+  (require 'eaf-browser)
+  (require 'eaf-pdf-viewer)
+  (require 'eaf-evil)
+  ;; REF: https://github.com/manateelazycat/lazycat-emacs/blob/f5348757b3c8a145d583712840349b108ff344cd/site-lisp/config/init-eaf.el#L132
+  (setq eaf-webengine-default-zoom 2)
+
+  ;; FIXME: seems `spc spc' don't work. What happen?
+  (define-key key-translation-map (kbd "SPC")
+      (lambda (prompt)
+        (if (derived-mode-p 'eaf-mode)
+            (pcase eaf--buffer-app-name
+              ("browser" (if  eaf-buffer-input-focus
+                             (kbd "SPC")
+                           (kbd eaf-evil-leader-key)))
+              ("pdf-viewer" (kbd eaf-evil-leader-key))
+              ("image-viewer" (kbd eaf-evil-leader-key))
+              (_  (kbd "SPC")))
+          (kbd "SPC")))))
+
+(use-package! rime
+  :custom
+  (default-input-method "rime")
+  :config
+  (setq rime-show-candidate 'posframe)
+  (setq rime-share-data-dir "/usr/share/rime-data")
+  ;; NOTE: this dir should exist, or `rime' will not properly working
+  ;; 雾凇拼音: https://github.com/iDvel/rime-ice
+  ;; also, this seems not recommanded by emacs-rime page
+  (setq rime-user-data-dir "/home/ayanamists/plum/package/iDvel/ice"))
+
+;; Seems good sometimes, but normally bad
+;; (setq evil-want-minibuffer t)

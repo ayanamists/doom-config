@@ -12,6 +12,17 @@
 (package! magic-latex-buffer
   :recipe (:host github :repo "zk-phi/magic-latex-buffer"))
 
+;; FIXME: unable in my ubuntu machine, why?
+(package! codeium
+  :recipe (:host github :repo "Exafunction/codeium.el"))
+
+(package! gptel)
+
+(package! rime)
+
+;; (package! auctex-latexmk
+;;   :recipe (:host github :repo "tom-tan/auctex-latexmk"))
+
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
 ;; https://github.com/radian-software/straight.el#the-recipe-format
