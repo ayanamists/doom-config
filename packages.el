@@ -16,9 +16,16 @@
 (package! codeium
   :recipe (:host github :repo "Exafunction/codeium.el"))
 
+(package! screenshot
+  :recipe (:host github :repo "tecosaur/screenshot"))
+
 (package! gptel)
 
 (package! rime)
+
+(package! ebib)
+(package! biblio)
+(package! blamer)
 
 ;; (package! auctex-latexmk
 ;;   :recipe (:host github :repo "tom-tan/auctex-latexmk"))

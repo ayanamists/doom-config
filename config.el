@@ -36,7 +36,6 @@
 ;; NOTE: see https://github.com/doomemacs/doomemacs/issues/6131#issuecomment-1051576882
 ;; should use float for font size
 (setq doom-font (font-spec :family "Mononoki Nerd Font" :size 13.0))
-(setq doom-symbol-font (font-spec :family "Noto Sans Symbols" :size 13.0))
 
 (setq doom-theme 'doom-one)
 
@@ -108,6 +107,8 @@
           (lambda () (prettify-symbols-mode t)
             (auto-fill-mode t)))
 
+(add-hook 'org-mode-hook (lambda () (auto-fill-mode t)))
+
 ;; (after! tex
 ;;   (add-hook 'TeX-update-style-hook (lambda () (rainbow-delimiters-mode -1))))
 ;;
@@ -126,10 +127,15 @@
     :models '("meta-llama/Llama-3-70b-chat-hf"))
     gptel-model "meta-llama/Llama-3-70b-chat-hf"))
 
+(use-package codeium
+  :init
+  ;; use globally
+  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point))
+
+;; (add-hook 'TeX-mode-hook (lambda () (setq completion-at-point-functions '(codeium-completion-at-point))))
+
 (use-package! eaf
   :load-path "~/.config/emacs/site-lisp/emacs-application-framework"
-  ;; FIXME: not working, have to manually run eaf-open
-  ; :custom
   ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
   ; (eaf-browser-continue-where-left-off t)
   ; (eaf-browser-enable-adblocker t)
@@ -146,6 +152,8 @@
   (require 'eaf-evil)
   ;; REF: https://github.com/manateelazycat/lazycat-emacs/blob/f5348757b3c8a145d583712840349b108ff344cd/site-lisp/config/init-eaf.el#L132
   (setq eaf-webengine-default-zoom 2)
+  ;; IMPORTANT, or eaf-pdf-viewer will extremely slow in old pdfs
+  (setq eaf-pdf-dark-mode nil)
 
   ;; FIXME: seems `spc spc' don't work. What happen?
   (define-key key-translation-map (kbd "SPC")
@@ -173,3 +181,57 @@
 
 ;; Seems good sometimes, but normally bad
 ;; (setq evil-want-minibuffer t)
+
+(setq ebib-file-associations '())
+
+(use-package blamer
+  :bind (("s-i" . blamer-show-commit-info))
+  :defer 20
+  :custom
+  (blamer-idle-time 0.3)
+  (blamer-min-offset 70)
+  :custom-face
+  (blamer-face ((t :foreground "#7a88cf"
+                    :background nil
+                    :height 140
+                    :italic t)))
+  :config
+  (global-blamer-mode 1))
+
+
+;; custmize startup
+;; matou sakura, 間桐 桜
+(defun my-weebery-is-always-greater ()
+  (let* ((banner '("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠤⠴⠐⠒⠒⠒⠒⠶⠤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ "
+                   "⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠴⠚⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣽⣦⣄⣀⠀⠀⠀⠀⠀⠀⠀ "
+                   "⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⢻⣦⡀⠀⠀⠀⠀ "
+                   "⠀⠀⠀⠀⠀⢀⣼⠅⠀⠀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⡄⠀⠀⠀ "
+                   "⠀⠀⠀⠀⠀⣾⡏⠀⢠⠞⠁⠀⠀⡀⠀⠀⠀⡄⢨⡄⠀⠀⢰⡄⠀⠀⠀⠀⠀⠀⣾⣿⣿⡄⠀⠀ "
+                   "⠀⠀⠀⠀⣸⠉⠀⣰⠏⣠⠄⢀⣼⠁⠀⠀⣼⡇⢸⡇⠀⣇⠈⢷⡐⣆⠀⠀⠀⣠⣿⣿⣿⣷⠀⠀ "
+                   "⠀⠀⠀⢠⡇⣰⢰⡏⣰⡟⠀⣾⡏⠀⠀⣼⢿⡇⣼⡇⠀⣿⠀⣾⣇⢹⣆⡀⠀⣽⣿⣿⣿⣿⡄⠀ "
+                   "⠀⠀⠀⢸⢠⣿⣾⢡⣿⠃⢸⣿⠃⠀⢰⡇⢸⠇⣧⡇⢰⣿⠀⣽⣿⢸⣿⣿⣶⣾⣿⣿⣿⣿⡇⠀ "
+                   "⠀⠀⠀⠟⠈⣿⣿⢸⣿⡇⢸⣿⡀⠀⣿⢀⣿⠘⣽⣇⣾⣿⡀⣿⣿⣾⣿⣿⣿⣿⣿⣿⣿⣿⢳⡄ "
+                   "⠀⠀⠀⡇⢀⣿⣿⣿⣇⣻⣾⣿⣧⠀⣷⣾⣿⣿⢿⣿⡿⢾⣿⣿⣸⣿⢿⣿⣿⣿⣿⣿⣿⡿⣿⣷ "
+                   "⠀⠀⠀⠇⢸⣿⣿⣿⡇⠀⢻⣿⠘⣖⣿⣿⣿⠏⢸⣟⣁⣸⣟⠀⠸⠋⠉⣿⣿⣿⣿⣿⣿⠇⣿⣯ "
+                   "⠀⠀⠀⠀⣼⡇⣿⣷⠛⢿⣿⣿⠄⠘⢿⡀⠋⠀⠙⠉⢸⣿⣿⣿⡷⣦⠀⠸⣿⣿⣿⣿⡿⠀⣿⣿ "
+                   "⠀⠀⠀⠀⣿⠇⣿⡏⠀⠘⣻⣿⠀⠀⠀⠀⠀⠀⠀⠀⢨⣽⠿⣿⡇⠁⠀⠸⠟⢛⠛⣿⣇⣰⣿⣿ "
+                   "⠀⠀⠀⠀⣿⠀⣿⡇⠀⠈⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣁⠀⣿⣿⡿⢻⣿ "
+                   "⢿⣷⠀⢠⡿⠀⣿⣧⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠞⠁⢠⢁⣿⣿⠇⢸⣿ "
+                   "⠀⠁⢀⣸⡇⠀⣿⣿⣧⡀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡟⠀⣠⣶⣿⣿⣿⠀⢸⣿ "
+                   "⠀⠀⠈⣿⡇⠀⣿⣿⣿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⢿⣿⣿⣿⣿⣿⣿⣿⠀⠀⢻ "
+                   "⠀⠀⢠⣿⠀⠀⣿⣿⡏⣿⣿⣿⣦⡀⠀⠀⠀⠀⠀⠀⣀⡤⠖⠉⠀⢸⣿⣿⣿⣿⣿⣿⡇⠀⠀⢸ "
+                   "⠀⠀⢸⡏⠀⣴⣿⣿⠃⣽⣿⢻⣿⣿⣦⠤⠤⠔⠒⠉⠁⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⠃⠀⠀⢸ "
+                   "⠀⠀⢸⠇⢰⣿⣿⡷⠀⣽⣿⣾⠛⠯⣿⣤⣤⠤⠤⠤⠤⠤⠤⠤⠐⠛⠀⢿⣿⣿⣿⣿⣄⣀⣄⠸ "
+                   "⠀⠀⠸⠀⣼⣸⣿⣧⣤⡿⠟⠋⠀⢰⣿⠙⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⣿⣿⣿⣿⣿⡿⠀ "
+                   "⠀⠀⡀⢀⣟⣻⡟⣿⠂⠀⠀⠀⢀⣾⡏⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢉⣙⣿⣿⡇⠀ "))
+         (longest-line (apply #'max (mapcar #'length banner))))
+    (put-text-property
+     (point)
+     (dolist (line banner (point))
+       (insert (+doom-dashboard--center
+                +doom-dashboard--width
+                (concat line (make-string (max 0 (- longest-line (length line))) 32)))
+               "\n"))
+     'face 'doom-dashboard-banner)))
+
+(setq +doom-dashboard-ascii-banner-fn #'my-weebery-is-always-greater)
