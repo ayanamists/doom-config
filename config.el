@@ -36,6 +36,7 @@
 ;; NOTE: see https://github.com/doomemacs/doomemacs/issues/6131#issuecomment-1051576882
 ;; should use float for font size
 (setq doom-font (font-spec :family "Mononoki Nerd Font" :size 13.0))
+(setq doom-symbol-font (font-spec :family "JuliaMono" :size 13.0))
 
 (setq doom-theme 'doom-one)
 
@@ -127,12 +128,10 @@
     :models '("meta-llama/Llama-3-70b-chat-hf"))
     gptel-model "meta-llama/Llama-3-70b-chat-hf"))
 
-(use-package codeium
-  :init
-  ;; use globally
-  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point))
-
-;; (add-hook 'TeX-mode-hook (lambda () (setq completion-at-point-functions '(codeium-completion-at-point))))
+;; (use-package codeium
+;;   :init
+;;   ;; use globally
+;;   (add-to-list 'completion-at-point-functions #'codeium-completion-at-point))
 
 (use-package! eaf
   :load-path "~/.config/emacs/site-lisp/emacs-application-framework"
@@ -184,19 +183,20 @@
 
 (setq ebib-file-associations '())
 
-(use-package blamer
-  :bind (("s-i" . blamer-show-commit-info))
-  :defer 20
-  :custom
-  (blamer-idle-time 0.3)
-  (blamer-min-offset 70)
-  :custom-face
-  (blamer-face ((t :foreground "#7a88cf"
-                    :background nil
-                    :height 140
-                    :italic t)))
-  :config
-  (global-blamer-mode 1))
+; Seems bad on two windows (left and right for example)
+; (use-package blamer
+;   :bind (("s-i" . blamer-show-commit-info))
+;   :defer 20
+;   :custom
+;   (blamer-idle-time 0.3)
+;   (blamer-min-offset 70)
+;   :custom-face
+;   (blamer-face ((t :foreground "#7a88cf"
+;                     :background nil
+;                     :height 140
+;                     :italic t)))
+;   :config
+;   (global-blamer-mode 1))
 
 
 ;; custmize startup
@@ -235,3 +235,35 @@
      'face 'doom-dashboard-banner)))
 
 (setq +doom-dashboard-ascii-banner-fn #'my-weebery-is-always-greater)
+
+;; see https://github.com/akermu/emacs-libvterm/issues/313#issuecomment-867525845
+;; problem with vterm and evil
+(use-package vterm
+  :config
+  (advice-add #'vterm--redraw :after (lambda (&rest args) (evil-refresh-cursor evil-state)))
+)
+
+;; use lsp-brigde for sharp code completion
+(use-package! lsp-bridge
+  :config
+  (setq lsp-bridge-enable-log nil)
+  (setq acm-enable-codeium t)
+  (setq acm-enable-icon t)
+  (setq acm-enable-preview t)
+  (global-lsp-bridge-mode))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((R . t)
+   (Haskell . t)))
+
+(with-eval-after-load "ob-haskell"
+  (load! "ob-haskell-hook.el"))
+
+;; On my iPad (with Termius), the modeline will cause display problem
+;; And emacs cannot work properly unless switch off `doom-modeline-mode'
+;; FIXME a temporial solution
+(defun disable-modeline-when-terminal ()
+  (when (not (display-graphic-p))
+    (doom-modeline-mode -1)))
+(add-hook 'window-setup-hook #'disable-modeline-when-terminal)
