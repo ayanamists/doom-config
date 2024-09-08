@@ -86,13 +86,13 @@
 ;; they are implemented.
 
 ;; add spacemacs-like 'SPC n' keys
-(map! :leader
-  "0" 'winum-select-window-0-or-10
-  "1" 'winum-select-window-1
-  "2" 'winum-select-window-2
-  "3" 'winum-select-window-3
-  "4" 'winum-select-window-4
-  )
+;; (map! :leader
+;;   "0" 'winum-select-window-0-or-10
+;;   "1" 'winum-select-window-1
+;;   "2" 'winum-select-window-2
+;;   "3" 'winum-select-window-3
+;;   "4" 'winum-select-window-4
+;;   )
 
 ;; add spacemacs-like 'SPC SPC' key to `execute-extended-command'
 (map! :leader "SPC" 'execute-extended-command)
@@ -120,18 +120,44 @@
 (use-package! gptel
   :config
   (setq!
-    gptel-max-tokens 4096
+    gptel-max-tokens 3900
     gptel-backend (gptel-make-openai "TogetherAI"         ;Any name you want
     :host "api.together.xyz"
     :key #'get-together-ai-key
     :stream t
-    :models '("meta-llama/Llama-3-70b-chat-hf"))
-    gptel-model "meta-llama/Llama-3-70b-chat-hf"))
+    :models '("meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo"
+              "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
+              "Qwen/Qwen2-72B-Instruct"))
+    gptel-model "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo"))
+
+;; see https://github.com/karthink/gptel/issues/128
+(defun my/gptel-write-buffer ()
+  "Save buffer to disk when starting gptel"
+  (unless (buffer-file-name (current-buffer))
+    (let ((name (or (buffer-name (current-buffer)) "gptel"))
+          (suffix (format-time-string "%Y%m%dT%H%M" (current-time)))
+          (chat-dir "~/repo/chats")
+          (ext (cond ((eq gptel-default-mode 'markdown-mode) ".md")
+                     ((eq gptel-default-mode 'org-mode) ".org")
+                     (t ".txt"))))
+      (unless (file-directory-p chat-dir)
+        (make-directory chat-dir :parents))
+      (write-file (expand-file-name (concat name "-" suffix ext) chat-dir)))))
+
+(add-hook 'gptel-mode-hook #'my/gptel-write-buffer)
 
 ;; (use-package codeium
 ;;   :init
 ;;   ;; use globally
 ;;   (add-to-list 'completion-at-point-functions #'codeium-completion-at-point))
+
+;; FIXME Weird behavior on my Ubuntu 24.04, what happen?
+;; (use-package! holo-layer
+;;   :load-path "~/.config/emacs/site-lisp/holo-layer"
+;;   :config
+;;   (setq holo-layer-enable-indent-rainbow t)
+;;   (holo-layer-enable)
+;;   )
 
 (use-package! eaf
   :load-path "~/.config/emacs/site-lisp/emacs-application-framework"
@@ -244,13 +270,13 @@
 )
 
 ;; use lsp-brigde for sharp code completion
-(use-package! lsp-bridge
-  :config
-  (setq lsp-bridge-enable-log nil)
-  (setq acm-enable-codeium t)
-  (setq acm-enable-icon t)
-  (setq acm-enable-preview t)
-  (global-lsp-bridge-mode))
+;; (use-package! lsp-bridge
+;;   :config
+;;   (setq lsp-bridge-enable-log nil)
+;;   (setq acm-enable-codeium t)
+;;   (setq acm-enable-icon t)
+;;   (setq acm-enable-preview t)
+;;   (global-lsp-bridge-mode))
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -267,3 +293,88 @@
   (when (not (display-graphic-p))
     (doom-modeline-mode -1)))
 (add-hook 'window-setup-hook #'disable-modeline-when-terminal)
+
+(global-tree-sitter-mode)
+(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+
+(defun centaur-tabs-hide-tab (x)
+  "Do no to show buffer X in tabs."
+  (let ((name (format "%s" x)))
+    (or
+     ;; Current window is not dedicated window.
+     (window-dedicated-p (selected-window))
+
+     ;; Buffer name not match below blacklist.
+     (string-prefix-p "*epc" name)
+     (string-prefix-p "*helm" name)
+     (string-prefix-p "*Helm" name)
+     (string-prefix-p "*Compile-Log*" name)
+     (string-prefix-p "*lsp" name)
+     (string-prefix-p "*company" name)
+     (string-prefix-p "*Flycheck" name)
+     (string-prefix-p "*tramp" name)
+     (string-prefix-p " *Mini" name)
+     (string-prefix-p "*help" name)
+     (string-prefix-p "*straight" name)
+     (string-prefix-p " *temp" name)
+     (string-prefix-p "*Help" name)
+     (string-prefix-p "*mybuf" name)
+     (string-prefix-p "*leetcode" name)
+
+     ;; Is not magit buffer.
+     (and (string-prefix-p "magit" name)
+          (not (file-name-extension name)))
+     )))
+
+(setq leetcode-prefer-language "scala")
+(setq leetcode-save-solutions t)
+(setq leetcode-directory "~/repo/jupyter_work/leetcode/solutions")
+
+(add-hook 'scala-mode-hook
+          (lambda () (flycheck-mode -1)))
+
+(after! lsp-mode
+  ;; https://github.com/emacs-lsp/lsp-mode/issues/3577#issuecomment-1709232622
+  (delete 'lsp-terraform lsp-client-packages))
+
+(use-package! indent-bars
+  :hook (prog-mode . indent-bars-mode)) ; or whichever modes you prefer
+
+;; It seems we should not switch to the native treesit.el
+;; Because there're still many problems and the syntax highlight is not very good
+;;
+;; (use-package treesit-auto
+;;   :custom
+;;   (treesit-auto-install 'prompt)
+;;   :config
+;;   (treesit-auto-add-to-auto-mode-alist 'all)
+;;   (delete 'markdown treesit-auto-langs)
+;;   (global-treesit-auto-mode))
+
+;; (use-package markdown-ts-mode
+;;   :mode ("\\.md\\'" . markdown-ts-mode)
+;;   :defer 't
+;;   :config
+;;   (add-to-list 'treesit-language-source-alist '(markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src"))
+;;   (add-to-list 'treesit-language-source-alist '(markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src")))
+
+;; EMAIL SETTINGS
+(setq message-send-mail-function 'smtpmail-send-it)
+(setq user-mail-address "ayanamists@gmail.com")
+(setq user-full-name "Chenxi Li")
+
+(setq smtpmail-smtp-user "ayanamists@gmail.com"
+      smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-service 465
+      smtpmail-stream-type 'ssl)
+
+;;Debug
+(setq smtpmail-debug-info t)
+(setq smtpmail-debug-verb t)
+
+(setq auth-sources '("~/.authinfo" "~/.authinfo.gpg"))
+
+(use-package! himalaya)
+
+;; TS
+(setq typescript-indent-level 2)

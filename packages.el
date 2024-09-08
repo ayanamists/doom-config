@@ -19,6 +19,12 @@
 (package! screenshot
   :recipe (:host github :repo "tecosaur/screenshot"))
 
+(package! indent-bars
+  :recipe (:host github :repo "jdtsmith/indent-bars"))
+
+(package! himalaya
+  :recipe (:host github :repo "dantecatalfamo/himalaya-emacs"))
+
 (package! gptel)
 
 (package! rime)
@@ -26,15 +32,24 @@
 (package! ebib)
 (package! biblio)
 (package! blamer)
-(when (package! lsp-bridge
-        :recipe (:host github
-                 :repo "manateelazycat/lsp-bridge"
-                 :branch "master"
-                 :files ("*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
-                 ;; do not perform byte compilation or native compilation for lsp-bridge
-                 :build (:not compile)))
-  (package! markdown-mode)
-  (package! yasnippet))
+;; (when (package! lsp-bridge
+;;         :recipe (:host github
+;;                  :repo "manateelazycat/lsp-bridge"
+;;                  :branch "master"
+;;                  :files ("*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
+;;                  ;; do not perform byte compilation or native compilation for lsp-bridge
+;;                  :build (:not compile)))
+;;   (package! markdown-mode)
+;;   (package! yasnippet))
+
+(package! leetcode)
+
+(package! boogie-friends)
+
+;; (package! markdown-ts-mode
+;;   :recipe (:host github :repo "LionyxML/markdown-ts-mode"))
+
+;; (package! treesit-auto)
 
 ;; (package! auctex-latexmk
 ;;   :recipe (:host github :repo "tom-tan/auctex-latexmk"))
