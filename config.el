@@ -117,18 +117,34 @@
 (defun get-together-ai-key ()
   (getenv "TOGETHER_AI_KEY"))
 
+(defun get-open-router-key ()
+  (getenv "OPEN_ROUTER_KEY"))
+
+
 (use-package! gptel
+
+;; (setq together-ai-model
+;;   (gptel-make-openai "TogetherAI"         ;Any name you want
+;;     :host "api.together.xyz"
+;;     :key #'get-together-ai-key
+;;     :stream t
+;;     :models '("meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo"
+;;               "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
+;;               "Qwen/Qwen2-72B-Instruct")))
   :config
   (setq!
-    gptel-max-tokens 3900
-    gptel-backend (gptel-make-openai "TogetherAI"         ;Any name you want
-    :host "api.together.xyz"
-    :key #'get-together-ai-key
-    :stream t
-    :models '("meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo"
-              "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
-              "Qwen/Qwen2-72B-Instruct"))
-    gptel-model "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo"))
+    gptel-max-tokens 4000
+    gptel-backend (gptel-make-openai "OpenRouter"               ;Any name you want
+      :host "openrouter.ai"
+      :endpoint "/api/v1/chat/completions"
+      :stream t
+      :key #'get-open-router-key                   ;can be a function that returns the key
+      :models '("openai/gpt-4o-2024-08-06"
+                "qwen/qwen-2.5-72b-instruct"
+                "meta-llama/llama-3-70b-instruct"
+                "google/gemini-pro"))
+    gptel-model "qwen/qwen-2.5-72b-instruct"))
+
 
 ;; see https://github.com/karthink/gptel/issues/128
 (defun my/gptel-write-buffer ()
@@ -145,6 +161,9 @@
       (write-file (expand-file-name (concat name "-" suffix ext) chat-dir)))))
 
 (add-hook 'gptel-mode-hook #'my/gptel-write-buffer)
+(add-hook 'gptel-mode-hook
+          (lambda () (evil-define-key 'normal
+                       'gptel-mode (kbd "?") #'gptel-menu)))
 
 ;; (use-package codeium
 ;;   :init
@@ -227,6 +246,8 @@
 
 ;; custmize startup
 ;; matou sakura, 間桐 桜
+(set-fontset-font t 'braille
+   (font-spec :family "Julia Mono" :spacing 'M))
 (defun my-weebery-is-always-greater ()
   (let* ((banner '("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠤⠴⠐⠒⠒⠒⠒⠶⠤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ "
                    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠴⠚⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣽⣦⣄⣀⠀⠀⠀⠀⠀⠀⠀ "
@@ -378,3 +399,33 @@
 
 ;; TS
 (setq typescript-indent-level 2)
+
+;; Dafny
+(add-hook 'dafny-mode-hook #'lsp-deferred)
+
+;; force AUCTeX to use pdftools
+(after! tex
+  (setq TeX-view-program-selection
+        '((output-pdf "PDF Tools")
+          (output-html "xdg-open")
+          ((output-dvi has-no-display-manager) "dvi2tty")
+          ((output-dvi style-pstricks) "dvips and gv")
+          (output-dvi "xdvi"))))
+
+;; modeline settings
+(setq doom-modeline-major-mode-color-icon t)
+(setq doom-modeline-buffer-file-name-style 'file-name)
+
+(defun open-file-in-right-window ()
+  "Open file in right window, creating it if necessary."
+  (interactive)
+  ;; Check if there's already a right window
+  (let ((right-window (window-in-direction 'right)))
+    (unless right-window
+      ;; If no right window, split the current one vertically
+      (split-window-right))
+    ;; Switch to the right window and open file with 'find-file'
+    (windmove-right)
+    (call-interactively 'find-file)
+    ;; Return focus to the left window
+    (windmove-left)))
