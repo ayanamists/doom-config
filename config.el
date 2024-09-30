@@ -35,8 +35,6 @@
 
 ;; NOTE: see https://github.com/doomemacs/doomemacs/issues/6131#issuecomment-1051576882
 ;; should use float for font size
-(setq doom-font (font-spec :family "Mononoki Nerd Font" :size 13.0))
-(setq doom-symbol-font (font-spec :family "JuliaMono" :size 13.0))
 
 (after! doom-ui
   ;; see https://github.com/LionyxML/auto-dark-emacs/issues/64
@@ -44,6 +42,9 @@
   (setq custom-safe-themes t) ;; this line is added to solve the problem
   (setq! auto-dark-themes '((doom-one) (doom-flatwhite)))
  (auto-dark-mode))
+
+(setq doom-font (font-spec :family "Mononoki Nerd Font" :size 17.0))
+(setq doom-symbol-font (font-spec :family "JuliaMono" :size 17.0))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -158,7 +159,6 @@
     gptel-backend ai-deepseek
     gptel-model 'deepseek-chat))
 
-
 ;; see https://github.com/karthink/gptel/issues/128
 (defun my/gptel-write-buffer ()
   "Save buffer to disk when starting gptel"
@@ -191,39 +191,39 @@
 ;;   (holo-layer-enable)
 ;;   )
 
-(use-package! eaf
-  :load-path "~/.config/emacs/site-lisp/emacs-application-framework"
-  ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
-  ; (eaf-browser-continue-where-left-off t)
-  ; (eaf-browser-enable-adblocker t)
-  ; (browse-url-browser-function 'eaf-open-browser)
-  ; :config
-  ; (defalias 'browse-web #'eaf-open-browser)
-  ; (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
-  ; (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
-  ; (eaf-bind-key take_photo "p" eaf-camera-keybinding)
-  ; (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
-  :config
-  (require 'eaf-browser)
-  (require 'eaf-pdf-viewer)
-  (require 'eaf-evil)
-  ;; REF: https://github.com/manateelazycat/lazycat-emacs/blob/f5348757b3c8a145d583712840349b108ff344cd/site-lisp/config/init-eaf.el#L132
-  (setq eaf-webengine-default-zoom 2)
-  ;; IMPORTANT, or eaf-pdf-viewer will extremely slow in old pdfs
-  (setq eaf-pdf-dark-mode nil)
+;; (use-package! eaf
+;;   :load-path "~/.emacs.d/emacs/site-lisp/emacs-application-framework"
+;;   ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+;;   ; (eaf-browser-continue-where-left-off t)
+;;   ; (eaf-browser-enable-adblocker t)
+;;   ; (browse-url-browser-function 'eaf-open-browser)
+;;   ; :config
+;;   ; (defalias 'browse-web #'eaf-open-browser)
+;;   ; (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+;;   ; (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+;;   ; (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+;;   ; (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
+;;   :config
+;;   (require 'eaf-browser)
+;;   (require 'eaf-pdf-viewer)
+;;   (require 'eaf-evil)
+;;   ;; REF: https://github.com/manateelazycat/lazycat-emacs/blob/f5348757b3c8a145d583712840349b108ff344cd/site-lisp/config/init-eaf.el#L132
+;;   (setq eaf-webengine-default-zoom 2)
+;;   ;; IMPORTANT, or eaf-pdf-viewer will extremely slow in old pdfs
+;;   (setq eaf-pdf-dark-mode nil)
 
-  ;; FIXME: seems `spc spc' don't work. What happen?
-  (define-key key-translation-map (kbd "SPC")
-      (lambda (prompt)
-        (if (derived-mode-p 'eaf-mode)
-            (pcase eaf--buffer-app-name
-              ("browser" (if  eaf-buffer-input-focus
-                             (kbd "SPC")
-                           (kbd eaf-evil-leader-key)))
-              ("pdf-viewer" (kbd eaf-evil-leader-key))
-              ("image-viewer" (kbd eaf-evil-leader-key))
-              (_  (kbd "SPC")))
-          (kbd "SPC")))))
+;;   ;; FIXME: seems `spc spc' don't work. What happen?
+;;   (define-key key-translation-map (kbd "SPC")
+;;       (lambda (prompt)
+;;         (if (derived-mode-p 'eaf-mode)
+;;             (pcase eaf--buffer-app-name
+;;               ("browser" (if  eaf-buffer-input-focus
+;;                              (kbd "SPC")
+;;                            (kbd eaf-evil-leader-key)))
+;;               ("pdf-viewer" (kbd eaf-evil-leader-key))
+;;               ("image-viewer" (kbd eaf-evil-leader-key))
+;;               (_  (kbd "SPC")))
+;;           (kbd "SPC")))))
 
 (use-package! rime
   :custom
@@ -282,10 +282,10 @@
 
 ;; see https://github.com/akermu/emacs-libvterm/issues/313#issuecomment-867525845
 ;; problem with vterm and evil
-(use-package vterm
-  :config
-  (advice-add #'vterm--redraw :after (lambda (&rest args) (evil-refresh-cursor evil-state)))
-)
+;; (use-package vterm
+;;   :config
+;;   (advice-add #'vterm--redraw :after (lambda (&rest args) (evil-refresh-cursor evil-state)))
+;; )
 
 ;; use lsp-brigde for sharp code completion
 ;; (use-package! lsp-bridge
@@ -356,8 +356,8 @@
   ;; https://github.com/emacs-lsp/lsp-mode/issues/3577#issuecomment-1709232622
   (delete 'lsp-terraform lsp-client-packages))
 
-(use-package! indent-bars
-  :hook (prog-mode . indent-bars-mode)) ; or whichever modes you prefer
+;; (use-package! indent-bars
+;;   :hook (prog-mode . indent-bars-mode)) ; or whichever modes you prefer
 
 ;; It seems we should not switch to the native treesit.el
 ;; Because there're still many problems and the syntax highlight is not very good
@@ -442,6 +442,7 @@
     ;; Return focus to the left window
     (windmove-left)))
 
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 ;; Doom requires each :lang module to set this variable,
 ;; but they may not always set it correctly.
