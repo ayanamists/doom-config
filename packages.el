@@ -22,8 +22,8 @@
 (package! screenshot
   :recipe (:host github :repo "tecosaur/screenshot"))
 
-(package! indent-bars
-  :recipe (:host github :repo "jdtsmith/indent-bars"))
+;; (package! indent-bars
+;;   :recipe (:host github :repo "jdtsmith/indent-bars"))
 
 (package! himalaya
   :recipe (:host github :repo "dantecatalfamo/himalaya-emacs"))
