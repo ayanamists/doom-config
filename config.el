@@ -244,33 +244,17 @@
 ;   (global-blamer-mode 1))
 
 
-;; custmize startup
-;; matou sakura, 間桐 桜
 (set-fontset-font t 'braille
    (font-spec :family "Julia Mono" :spacing 'M))
-(defun my-weebery-is-always-greater ()
-  (let* ((banner '("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠤⠴⠐⠒⠒⠒⠒⠶⠤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ "
-                   "⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠴⠚⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣽⣦⣄⣀⠀⠀⠀⠀⠀⠀⠀ "
-                   "⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⢻⣦⡀⠀⠀⠀⠀ "
-                   "⠀⠀⠀⠀⠀⢀⣼⠅⠀⠀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⡄⠀⠀⠀ "
-                   "⠀⠀⠀⠀⠀⣾⡏⠀⢠⠞⠁⠀⠀⡀⠀⠀⠀⡄⢨⡄⠀⠀⢰⡄⠀⠀⠀⠀⠀⠀⣾⣿⣿⡄⠀⠀ "
-                   "⠀⠀⠀⠀⣸⠉⠀⣰⠏⣠⠄⢀⣼⠁⠀⠀⣼⡇⢸⡇⠀⣇⠈⢷⡐⣆⠀⠀⠀⣠⣿⣿⣿⣷⠀⠀ "
-                   "⠀⠀⠀⢠⡇⣰⢰⡏⣰⡟⠀⣾⡏⠀⠀⣼⢿⡇⣼⡇⠀⣿⠀⣾⣇⢹⣆⡀⠀⣽⣿⣿⣿⣿⡄⠀ "
-                   "⠀⠀⠀⢸⢠⣿⣾⢡⣿⠃⢸⣿⠃⠀⢰⡇⢸⠇⣧⡇⢰⣿⠀⣽⣿⢸⣿⣿⣶⣾⣿⣿⣿⣿⡇⠀ "
-                   "⠀⠀⠀⠟⠈⣿⣿⢸⣿⡇⢸⣿⡀⠀⣿⢀⣿⠘⣽⣇⣾⣿⡀⣿⣿⣾⣿⣿⣿⣿⣿⣿⣿⣿⢳⡄ "
-                   "⠀⠀⠀⡇⢀⣿⣿⣿⣇⣻⣾⣿⣧⠀⣷⣾⣿⣿⢿⣿⡿⢾⣿⣿⣸⣿⢿⣿⣿⣿⣿⣿⣿⡿⣿⣷ "
-                   "⠀⠀⠀⠇⢸⣿⣿⣿⡇⠀⢻⣿⠘⣖⣿⣿⣿⠏⢸⣟⣁⣸⣟⠀⠸⠋⠉⣿⣿⣿⣿⣿⣿⠇⣿⣯ "
-                   "⠀⠀⠀⠀⣼⡇⣿⣷⠛⢿⣿⣿⠄⠘⢿⡀⠋⠀⠙⠉⢸⣿⣿⣿⡷⣦⠀⠸⣿⣿⣿⣿⡿⠀⣿⣿ "
-                   "⠀⠀⠀⠀⣿⠇⣿⡏⠀⠘⣻⣿⠀⠀⠀⠀⠀⠀⠀⠀⢨⣽⠿⣿⡇⠁⠀⠸⠟⢛⠛⣿⣇⣰⣿⣿ "
-                   "⠀⠀⠀⠀⣿⠀⣿⡇⠀⠈⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣁⠀⣿⣿⡿⢻⣿ "
-                   "⢿⣷⠀⢠⡿⠀⣿⣧⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠞⠁⢠⢁⣿⣿⠇⢸⣿ "
-                   "⠀⠁⢀⣸⡇⠀⣿⣿⣧⡀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡟⠀⣠⣶⣿⣿⣿⠀⢸⣿ "
-                   "⠀⠀⠈⣿⡇⠀⣿⣿⣿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⢿⣿⣿⣿⣿⣿⣿⣿⠀⠀⢻ "
-                   "⠀⠀⢠⣿⠀⠀⣿⣿⡏⣿⣿⣿⣦⡀⠀⠀⠀⠀⠀⠀⣀⡤⠖⠉⠀⢸⣿⣿⣿⣿⣿⣿⡇⠀⠀⢸ "
-                   "⠀⠀⢸⡏⠀⣴⣿⣿⠃⣽⣿⢻⣿⣿⣦⠤⠤⠔⠒⠉⠁⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⠃⠀⠀⢸ "
-                   "⠀⠀⢸⠇⢰⣿⣿⡷⠀⣽⣿⣾⠛⠯⣿⣤⣤⠤⠤⠤⠤⠤⠤⠤⠐⠛⠀⢿⣿⣿⣿⣿⣄⣀⣄⠸ "
-                   "⠀⠀⠸⠀⣼⣸⣿⣧⣤⡿⠟⠋⠀⢰⣿⠙⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⣿⣿⣿⣿⣿⡿⠀ "
-                   "⠀⠀⡀⢀⣟⣻⡟⣿⠂⠀⠀⠀⢀⣾⡏⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢉⣙⣿⣿⡇⠀ "))
+
+(defun read-lines-to-list (file-path)
+  "Read the contents of FILE-PATH and return a list of lines."
+  (with-temp-buffer
+    (insert-file-contents file-path)
+    (split-string (buffer-string) "\n" t)))
+
+(defun create-anime-banner ()
+  (let* ((banner (read-lines-to-list "~/.config/doom/ascii-waifu/matou-sakura.txt"))
          (longest-line (apply #'max (mapcar #'length banner))))
     (put-text-property
      (point)
@@ -281,7 +265,7 @@
                "\n"))
      'face 'doom-dashboard-banner)))
 
-(setq +doom-dashboard-ascii-banner-fn #'my-weebery-is-always-greater)
+(setq +doom-dashboard-ascii-banner-fn #'create-anime-banner)
 
 ;; see https://github.com/akermu/emacs-libvterm/issues/313#issuecomment-867525845
 ;; problem with vterm and evil
