@@ -38,7 +38,7 @@
 (setq doom-font (font-spec :family "Mononoki Nerd Font" :size 13.0))
 (setq doom-symbol-font (font-spec :family "JuliaMono" :size 13.0))
 
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-flatwhite)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -95,8 +95,7 @@
 ;;   )
 
 ;; add spacemacs-like 'SPC SPC' key to `execute-extended-command'
-(map! :leader "SPC" 'execute-extended-command)
-
+(map! :leader "SPC" #'execute-extended-command)
 
 ;; add prettify symbols for latex
 ;; FIXME: it's so slow, try to fix it
@@ -245,7 +244,7 @@
 
 
 (set-fontset-font t 'braille
-   (font-spec :family "Julia Mono" :spacing 'M))
+   (font-spec :family "JuliaMono" :spacing 'M))
 
 (defun read-lines-to-list (file-path)
   "Read the contents of FILE-PATH and return a list of lines."
@@ -382,7 +381,9 @@
 (use-package! himalaya)
 
 ;; TS
-(setq typescript-indent-level 2)
+(add-hook 'typescript-mode-hook
+          (lambda ()
+            (setq typescript-indent-level 2)))
 
 ;; Dafny
 (add-hook 'dafny-mode-hook #'lsp-deferred)
@@ -399,6 +400,13 @@
 ;; modeline settings
 (setq doom-modeline-major-mode-color-icon t)
 (setq doom-modeline-buffer-file-name-style 'file-name)
+(setq doom-modeline-hud t)
+(setq doom-modeline-height 1)
+(let ((font "JuliaMono"))
+  (custom-set-faces
+  '(mode-line ((t (:family font :height 0.93))))
+  '(mode-line-active ((t (:family font :height 0.93)))) ; For 29+
+  '(mode-line-inactive ((t (:family font :height 0.93))))))
 
 (defun open-file-in-right-window ()
   "Open file in right window, creating it if necessary."
@@ -413,3 +421,5 @@
     (call-interactively 'find-file)
     ;; Return focus to the left window
     (windmove-left)))
+
+
