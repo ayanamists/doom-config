@@ -426,8 +426,8 @@
     (windmove-left)))
 
 
-;; Doom seems require each :lang module to set this var
-;; and they may not set is correctly
+;; Doom requires each :lang module to set this variable,
+;; but they may not always set it correctly.
 (after! projectile
   (setq projectile-project-root-files
         '(".projectile"
