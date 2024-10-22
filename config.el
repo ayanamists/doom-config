@@ -384,6 +384,9 @@
 (add-hook 'typescript-mode-hook
           (lambda ()
             (setq typescript-indent-level 2)))
+(add-hook 'typescript-tsx-mode-hook
+          (lambda ()
+            (setq typescript-indent-level 2)))
 
 ;; Dafny
 (add-hook 'dafny-mode-hook #'lsp-deferred)
