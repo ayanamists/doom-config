@@ -423,3 +423,41 @@
     (windmove-left)))
 
 
+;; Doom seems require each :lang module to set this var
+;; and they may not set is correctly
+(after! projectile
+  (setq projectile-project-root-files
+        '(".projectile"
+          "rebar.config"
+          "project.clj"
+          "build.boot"
+          "deps.edn"
+          "SConstruct"
+          "default.nix"
+          "flake.nix"
+          "pom.xml"
+          "build.sbt"
+          "build.sc"
+          "gradlew"
+          "build.gradle"
+          ".ensime"
+          "Gemfile"
+          "requirements.txt"
+          "setup.py"
+          "tox.ini"
+          "composer.json"
+          "Cargo.toml"
+          "mix.exs"
+          "stack.yaml"
+          "dune-project"
+          "info.rkt"
+          "DESCRIPTION"
+          "TAGS"
+          "GTAGS"
+          "configure.in"
+          "configure.ac"
+          "cscope.out"
+          "Makefile"
+          "CMakeLists.txt"
+          "WORKSPACE"
+          "debian/control")))
