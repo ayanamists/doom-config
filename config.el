@@ -434,6 +434,7 @@
           "rebar.config"
           "project.clj"
           "build.boot"
+          "package.json"
           "deps.edn"
           "SConstruct"
           "default.nix"
