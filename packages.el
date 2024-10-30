@@ -9,6 +9,9 @@
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;; (package! some-package)
 
+;; auto switch themes
+(package! auto-dark)
+
 (package! magic-latex-buffer
   :recipe (:host github :repo "zk-phi/magic-latex-buffer"))
 

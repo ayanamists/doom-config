@@ -38,7 +38,12 @@
 (setq doom-font (font-spec :family "Mononoki Nerd Font" :size 13.0))
 (setq doom-symbol-font (font-spec :family "JuliaMono" :size 13.0))
 
-(setq doom-theme 'doom-flatwhite)
+(after! doom-ui
+  ;; see https://github.com/LionyxML/auto-dark-emacs/issues/64
+  ;; this problem seems quite complex
+  (setq custom-safe-themes t) ;; this line is added to solve the problem
+  (setq! auto-dark-themes '((doom-one) (doom-flatwhite)))
+ (auto-dark-mode))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
