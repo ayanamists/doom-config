@@ -22,6 +22,9 @@
 (package! screenshot
   :recipe (:host github :repo "tecosaur/screenshot"))
 
+(package! sis
+  :recipe (:host github :repo "laishulu/emacs-smart-input-source"))
+
 ;; (package! indent-bars
 ;;   :recipe (:host github :repo "jdtsmith/indent-bars"))
 

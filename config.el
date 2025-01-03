@@ -443,6 +443,13 @@
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
+(sis-ism-lazyman-config
+ "com.apple.keylayout.ABC"
+ "com.apple.inputmethod.SCIM.ITABC")
+
+(sis-global-respect-mode t)
+
+
 ;; Doom requires each :lang module to set this variable,
 ;; but they may not always set it correctly.
 (after! projectile
