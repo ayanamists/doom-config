@@ -43,7 +43,7 @@
   (setq! auto-dark-themes '((doom-one) (doom-flatwhite)))
  (auto-dark-mode))
 
-(setq doom-font (font-spec :family "Mononoki Nerd Font" :size 17.0))
+(setq doom-font (font-spec :family "Iosevka" :size 17.0))
 (setq doom-symbol-font (font-spec :family "JuliaMono" :size 17.0))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
@@ -225,16 +225,18 @@
 ;;               (_  (kbd "SPC")))
 ;;           (kbd "SPC")))))
 
-(use-package! rime
-  :custom
-  (default-input-method "rime")
-  :config
-  (setq rime-show-candidate 'posframe)
-  (setq rime-share-data-dir "/usr/share/rime-data")
-  ;; NOTE: this dir should exist, or `rime' will not properly working
-  ;; 雾凇拼音: https://github.com/iDvel/rime-ice
-  ;; also, this seems not recommanded by emacs-rime page
-  (setq rime-user-data-dir "/home/ayanamists/plum/package/iDvel/ice"))
+;; (use-package! rime
+;;   :custom
+;;   (default-input-method "rime")
+;;   (rime-librime-root "~/repo/librime/dist")
+;;   (rime-emacs-module-header-root "/opt/homebrew/include")
+;;   :config
+;;   (setq rime-show-candidate 'posframe)
+;;   (setq rime-share-data-dir "/usr/share/rime-data")
+;;   ;; NOTE: this dir should exist, or `rime' will not properly working
+;;   ;; 雾凇拼音: https://github.com/iDvel/rime-ice
+;;   ;; also, this seems not recommanded by emacs-rime page
+;;   (setq rime-user-data-dir "~/Library/Rime/"))
 
 ;; Seems good sometimes, but normally bad
 ;; (setq evil-want-minibuffer t)
