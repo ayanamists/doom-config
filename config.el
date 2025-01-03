@@ -80,6 +80,8 @@
 
 (load! "latex-additional/windows.el")
 (load! "latex-additional/replace-dollar.el")
+(load! "gptel-rewrite-master.el")
+(load! "get-keys.el")
 
 ;; To get information about any of these functions/macros, move the cursor over
 ;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
@@ -101,6 +103,9 @@
 
 ;; add spacemacs-like 'SPC SPC' key to `execute-extended-command'
 (map! :leader "SPC" #'execute-extended-command)
+
+;; use C-<spc> to for toggle-input-method
+(map! "C-SPC" #'toggle-input-method)
 
 ;; add prettify symbols for latex
 ;; FIXME: it's so slow, try to fix it
@@ -124,30 +129,34 @@
 (defun get-open-router-key ()
   (getenv "OPEN_ROUTER_KEY"))
 
+(defun get-deepseek-key ()
+  (get-bitwarden-apikey "df258464-6b65-4f8d-9a7a-b25a008504b1"))
 
-(use-package! gptel
-
-;; (setq together-ai-model
-;;   (gptel-make-openai "TogetherAI"         ;Any name you want
-;;     :host "api.together.xyz"
-;;     :key #'get-together-ai-key
-;;     :stream t
-;;     :models '("meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo"
-;;               "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
-;;               "Qwen/Qwen2-72B-Instruct")))
-  :config
-  (setq!
-    gptel-max-tokens 4000
-    gptel-backend (gptel-make-openai "OpenRouter"               ;Any name you want
+(setq ai-openrouter
+     (gptel-make-openai "OpenRouter"
       :host "openrouter.ai"
       :endpoint "/api/v1/chat/completions"
       :stream t
-      :key #'get-open-router-key                   ;can be a function that returns the key
-      :models '("openai/gpt-4o-2024-08-06"
-                "qwen/qwen-2.5-72b-instruct"
-                "meta-llama/llama-3-70b-instruct"
-                "google/gemini-pro"))
-    gptel-model "qwen/qwen-2.5-72b-instruct"))
+      :key #'get-open-router-key
+      :models '(openai/gpt-4o-2024-08-06
+                qwen/qwen-2.5-72b-instruct
+                meta-llama/llama-3-70b-instruct
+                google/gemini-pro)))
+
+(setq ai-deepseek
+      (gptel-make-openai "DeepSeek"
+       :host "api.deepseek.com"
+       :endpoint "/chat/completions"
+       :stream t
+       :key #'get-deepseek-key
+       :models '(deepseek-chat deepseek-coder)))
+
+(use-package! gptel
+  :config
+  (setq!
+    gptel-max-tokens 4000
+    gptel-backend ai-deepseek
+    gptel-model 'deepseek-chat))
 
 
 ;; see https://github.com/karthink/gptel/issues/128
@@ -292,8 +301,9 @@
  '((R . t)
    (Haskell . t)))
 
-(with-eval-after-load "ob-haskell"
-  (load! "ob-haskell-hook.el"))
+;; (with-eval-after-load "ob-haskell"
+;;   (load! "ob-haskell.el")
+;;   (load! "ob-haskell-hook.el"))
 
 ;; On my iPad (with Termius), the modeline will cause display problem
 ;; And emacs cannot work properly unless switch off `doom-modeline-mode'
@@ -394,6 +404,8 @@
             (setq typescript-indent-level 2)))
 
 ;; Dafny
+;; FIXME some error in dafny lsp
+;; See https://github.com/boogie-org/boogie-friends/issues/42
 (add-hook 'dafny-mode-hook #'lsp-deferred)
 
 ;; force AUCTeX to use pdftools
@@ -470,3 +482,13 @@
           "CMakeLists.txt"
           "WORKSPACE"
           "debian/control")))
+
+(use-package! bitwarden
+  :config
+  (setq! bitwarden-automatic-unlock
+      (let* ((matches (auth-source-search :user "ayanamists@gmail.com"
+                                          :host "bitwarden.com"
+                                          :require '(:secret)
+                                          :max 1))
+             (entry (nth 0 matches)))
+        (plist-get entry :secret))))

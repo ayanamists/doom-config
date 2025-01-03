@@ -28,7 +28,13 @@
 (package! himalaya
   :recipe (:host github :repo "dantecatalfamo/himalaya-emacs"))
 
-(package! gptel)
+(package! gptel
+  :recipe (:host github :repo "ayanamists/gptel"))
+
+(package! bitwarden
+  :recipe (:host github :repo "seanfarley/emacs-bitwarden"))
+
+(package! olivetti)
 
 (package! rime)
 
