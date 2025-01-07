@@ -22,7 +22,7 @@
   "Translate the selected region or buffer to the specified language.
 LANG is the full name of the target language (e.g., `French')."
   (interactive
-   (list (completing-read "Target language: " '("French" "Spanish" "German" "Chinese" "Japanese" "Russian" "Italian" "Korean"))))
+   (list (completing-read "Target language: " '("English" "French" "Spanish" "German" "Chinese" "Japanese" "Russian" "Italian" "Korean"))))
   (unless (use-region-p)
     (error "You should select a region to perform such action"))
   (let ((prompt (format "Translate the following text to %s. Do not explain your changes." lang)))
@@ -31,9 +31,10 @@ LANG is the full name of the target language (e.g., `French')."
 (transient-define-prefix gptel-translate-to-menu ()
   "Translate text to a specified language."
   [:description "Select target language:"
+   ("e" "English" (lambda () (interactive) (gptel-translate-to "English")))
    ("f" "French" (lambda () (interactive) (gptel-translate-to "French")))
-   ("e" "Spanish" (lambda () (interactive) (gptel-translate-to "Spanish")))
-   ("d" "German" (lambda () (interactive) (gptel-translate-to "German")))
+   ("s" "Spanish" (lambda () (interactive) (gptel-translate-to "Spanish")))
+   ("g" "German" (lambda () (interactive) (gptel-translate-to "German")))
    ("c" "Chinese" (lambda () (interactive) (gptel-translate-to "Chinese")))
    ("j" "Japanese" (lambda () (interactive) (gptel-translate-to "Japanese")))
    ("r" "Russian" (lambda () (interactive) (gptel-translate-to "Russian")))
