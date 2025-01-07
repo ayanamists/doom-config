@@ -191,39 +191,39 @@
 ;;   (holo-layer-enable)
 ;;   )
 
-(use-package! eaf
-  :load-path "~/.config/emacs/site-lisp/emacs-application-framework"
-  ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
-  ; (eaf-browser-continue-where-left-off t)
-  ; (eaf-browser-enable-adblocker t)
-  ; (browse-url-browser-function 'eaf-open-browser)
-  ; :config
-  ; (defalias 'browse-web #'eaf-open-browser)
-  ; (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
-  ; (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
-  ; (eaf-bind-key take_photo "p" eaf-camera-keybinding)
-  ; (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
-  :config
-  (require 'eaf-browser)
-  (require 'eaf-pdf-viewer)
-  (require 'eaf-evil)
-  ;; REF: https://github.com/manateelazycat/lazycat-emacs/blob/f5348757b3c8a145d583712840349b108ff344cd/site-lisp/config/init-eaf.el#L132
-  (setq eaf-webengine-default-zoom 2)
-  ;; IMPORTANT, or eaf-pdf-viewer will extremely slow in old pdfs
-  (setq eaf-pdf-dark-mode nil)
+;; (use-package! eaf
+;;   :load-path "~/.config/emacs/site-lisp/emacs-application-framework"
+;;   ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+;;   ; (eaf-browser-continue-where-left-off t)
+;;   ; (eaf-browser-enable-adblocker t)
+;;   ; (browse-url-browser-function 'eaf-open-browser)
+;;   ; :config
+;;   ; (defalias 'browse-web #'eaf-open-browser)
+;;   ; (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+;;   ; (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+;;   ; (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+;;   ; (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
+;;   :config
+;;   (require 'eaf-browser)
+;;   (require 'eaf-pdf-viewer)
+;;   (require 'eaf-evil)
+;;   ;; REF: https://github.com/manateelazycat/lazycat-emacs/blob/f5348757b3c8a145d583712840349b108ff344cd/site-lisp/config/init-eaf.el#L132
+;;   (setq eaf-webengine-default-zoom 2)
+;;   ;; IMPORTANT, or eaf-pdf-viewer will extremely slow in old pdfs
+;;   (setq eaf-pdf-dark-mode nil)
 
-  ;; FIXME: seems `spc spc' don't work. What happen?
-  (define-key key-translation-map (kbd "SPC")
-      (lambda (prompt)
-        (if (derived-mode-p 'eaf-mode)
-            (pcase eaf--buffer-app-name
-              ("browser" (if  eaf-buffer-input-focus
-                             (kbd "SPC")
-                           (kbd eaf-evil-leader-key)))
-              ("pdf-viewer" (kbd eaf-evil-leader-key))
-              ("image-viewer" (kbd eaf-evil-leader-key))
-              (_  (kbd "SPC")))
-          (kbd "SPC")))))
+;;   ;; FIXME: seems `spc spc' don't work. What happen?
+;;   (define-key key-translation-map (kbd "SPC")
+;;       (lambda (prompt)
+;;         (if (derived-mode-p 'eaf-mode)
+;;             (pcase eaf--buffer-app-name
+;;               ("browser" (if  eaf-buffer-input-focus
+;;                              (kbd "SPC")
+;;                            (kbd eaf-evil-leader-key)))
+;;               ("pdf-viewer" (kbd eaf-evil-leader-key))
+;;               ("image-viewer" (kbd eaf-evil-leader-key))
+;;               (_  (kbd "SPC")))
+;;           (kbd "SPC")))))
 
 (use-package! rime
   :custom
