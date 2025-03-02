@@ -35,7 +35,7 @@
 
 ;; NOTE: see https://github.com/doomemacs/doomemacs/issues/6131#issuecomment-1051576882
 ;; should use float for font size
-(setq doom-font (font-spec :family "Mononoki Nerd Font" :size 13.0))
+(setq doom-font (font-spec :family "Iosevka" :size 13.0))
 (setq doom-symbol-font (font-spec :family "JuliaMono" :size 13.0))
 
 (after! doom-ui
@@ -82,6 +82,8 @@
 (load! "latex-additional/replace-dollar.el")
 (load! "gptel-rewrite-master.el")
 (load! "get-keys.el")
+(load! "openrouter-model-list/get-model-list.el")
+(load! openrouter-model-list-file)
 
 ;; To get information about any of these functions/macros, move the cursor over
 ;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
@@ -121,13 +123,12 @@
 
 ;; (after! tex
 ;;   (add-hook 'TeX-update-style-hook (lambda () (rainbow-delimiters-mode -1))))
-;;
 
 (defun get-together-ai-key ()
   (getenv "TOGETHER_AI_KEY"))
 
 (defun get-open-router-key ()
-  (getenv "OPEN_ROUTER_KEY"))
+  (get-bitwarden-apikey "2b596056-1cbd-4421-8067-b28300727dce"))
 
 (defun get-deepseek-key ()
   (get-bitwarden-apikey "df258464-6b65-4f8d-9a7a-b25a008504b1"))
@@ -138,10 +139,7 @@
       :endpoint "/api/v1/chat/completions"
       :stream t
       :key #'get-open-router-key
-      :models '(openai/gpt-4o-2024-08-06
-                qwen/qwen-2.5-72b-instruct
-                meta-llama/llama-3-70b-instruct
-                google/gemini-pro)))
+      :models openrouter-model-list))
 
 (setq ai-deepseek
       (gptel-make-openai "DeepSeek"
@@ -155,9 +153,8 @@
   :config
   (setq!
     gptel-max-tokens 4000
-    gptel-backend ai-deepseek
-    gptel-model 'deepseek-chat))
-
+    gptel-backend ai-openrouter
+    gptel-model 'deepseek/deepseek-chat))
 
 ;; see https://github.com/karthink/gptel/issues/128
 (defun my/gptel-write-buffer ()
