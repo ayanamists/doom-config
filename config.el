@@ -210,7 +210,7 @@
 ;;   (setq eaf-webengine-default-zoom 2)
 ;;   ;; IMPORTANT, or eaf-pdf-viewer will extremely slow in old pdfs
 ;;   (setq eaf-pdf-dark-mode nil)
-
+;;
 ;;   ;; FIXME: seems `spc spc' don't work. What happen?
 ;;   (define-key key-translation-map (kbd "SPC")
 ;;       (lambda (prompt)
@@ -281,10 +281,10 @@
 
 ;; see https://github.com/akermu/emacs-libvterm/issues/313#issuecomment-867525845
 ;; problem with vterm and evil
-(use-package vterm
-  :config
-  (advice-add #'vterm--redraw :after (lambda (&rest args) (evil-refresh-cursor evil-state)))
-)
+;; (use-package vterm
+;;   :config
+;;   (advice-add #'vterm--redraw :after (lambda (&rest args) (evil-refresh-cursor evil-state)))
+;; )
 
 ;; use lsp-brigde for sharp code completion
 ;; (use-package! lsp-bridge
@@ -355,8 +355,8 @@
   ;; https://github.com/emacs-lsp/lsp-mode/issues/3577#issuecomment-1709232622
   (delete 'lsp-terraform lsp-client-packages))
 
-(use-package! indent-bars
-  :hook (prog-mode . indent-bars-mode)) ; or whichever modes you prefer
+;; (use-package! indent-bars
+;;   :hook (prog-mode . indent-bars-mode)) ; or whichever modes you prefer
 
 ;; It seems we should not switch to the native treesit.el
 ;; Because there're still many problems and the syntax highlight is not very good
@@ -441,6 +441,7 @@
     ;; Return focus to the left window
     (windmove-left)))
 
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 ;; Doom requires each :lang module to set this variable,
 ;; but they may not always set it correctly.
