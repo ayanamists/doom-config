@@ -177,6 +177,15 @@
           (lambda () (evil-define-key 'normal
                        'gptel-mode (kbd "?") #'gptel-menu)))
 
+;; accept completion from copilot
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("<tab>" . 'copilot-accept-completion)
+              ("TAB" . 'copilot-accept-completion)
+              ("C-TAB" . 'copilot-accept-completion-by-word)
+              ("C-<tab>" . 'copilot-accept-completion-by-word)))
+
 ;; (use-package codeium
 ;;   :init
 ;;   ;; use globally
