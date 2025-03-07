@@ -116,7 +116,9 @@
 ;; FIXME: I cannot disable `rainbow-delimiters-mode' in TeX mode,
 ;; what happend?
 (add-hook 'TeX-mode-hook
-          (lambda () (prettify-symbols-mode t)
+          (lambda ()
+            (prettify-symbols-mode t)
+            (setq prettify-symbols-unprettify-at-point t)
             (auto-fill-mode t)))
 
 (add-hook 'org-mode-hook (lambda () (auto-fill-mode t)))
