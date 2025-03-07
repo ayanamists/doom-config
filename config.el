@@ -42,7 +42,7 @@
   ;; see https://github.com/LionyxML/auto-dark-emacs/issues/64
   ;; this problem seems quite complex
   (setq custom-safe-themes t) ;; this line is added to solve the problem
-  (setq! auto-dark-themes '((doom-one) (doom-flatwhite)))
+  (setq! auto-dark-themes '((modus-vivendi-tinted) (modus-operandi-tinted)))
  (auto-dark-mode))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
